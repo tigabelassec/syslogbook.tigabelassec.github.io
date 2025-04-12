@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="id"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="id" /><updated>2025-04-12T13:48:42+07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Syslogbook</title><subtitle>Syslogbook adalah blog dokumentasi eksperimen, troubleshooting, dan konfigurasi sistem, khususnya di Windows dan WSL. Ditujukan sebagai catatan pribadi yang terstruktur, namun juga bermanfaat bagi siapa saja yang ingin mengatasi masalah teknis dan menjaga kestabilan sistem saat bereksperimen.
+</subtitle><author><name>Ilham</name><email>contact@tigabelassec.my.id</email></author><entry><title type="html">Fix: Cannot write to /system in LDPlayer 9 (Read-only File System)</title><link href="http://localhost:4000/ldplayer/Cannot-Write-to-system-in-LDPlayer-9/" rel="alternate" type="text/html" title="Fix: Cannot write to /system in LDPlayer 9 (Read-only File System)" /><published>2025-04-11T00:00:00+07:00</published><updated>2025-04-11T00:00:00+07:00</updated><id>http://localhost:4000/ldplayer/Cannot%20Write%20to%20system%20in%20LDPlayer%209</id><content type="html" xml:base="http://localhost:4000/ldplayer/Cannot-Write-to-system-in-LDPlayer-9/"><![CDATA[<h3 id="permasalahan">Permasalahan</h3>
+
+<p>Saat mencoba menyalin atau mengedit file di direktori <code class="language-plaintext highlighter-rouge">/system</code> pada emulator <strong>LDPlayer 9</strong>, saya mengalami error berikut:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># mv /sdcard/9a5ba575.0 /system/etc/security/cacerts</span>
+<span class="nb">mv</span>: /system/etc/security/cacerts/9a5ba575.0: Read-only file system
+</code></pre></div></div>
+
+<p>Padahal pengaturan <strong>Root Permission</strong> sudah diaktifkan di emulator, namun tetap tidak bisa menyalin file ke partisi <code class="language-plaintext highlighter-rouge">/system</code>. Hal ini terjadi karena partisi tersebut masih berada dalam mode <strong>read-only</strong> secara default.</p>
+
+<h3 id="mengapa-ini-terjadi">Mengapa ini terjadi?</h3>
+
+<p>Secara default, sistem Android (termasuk emulator seperti LDPlayer) melakukan <strong>mount</strong> terhadap direktori <code class="language-plaintext highlighter-rouge">/system</code> dalam mode <code class="language-plaintext highlighter-rouge">ro</code> (read-only) untuk menjaga integritas file sistem. Ini adalah langkah keamanan agar pengguna atau aplikasi tidak sembarangan mengubah file penting.</p>
+
+<p>Untuk bisa memodifikasi direktori ini, kita harus <strong>remount</strong> partisi tersebut dalam mode <code class="language-plaintext highlighter-rouge">rw</code> (read-write), agar sistem mengizinkan perubahan.</p>
+
+<h3 id="apa-itu-setprop-persistsysroot_access-1">Apa Itu <code class="language-plaintext highlighter-rouge">setprop persist.sys.root_access 1</code>?</h3>
+
+<p><code class="language-plaintext highlighter-rouge">setprop</code> adalah perintah di sistem Android yang digunakan untuk mengatur <em>system properties</em> secara runtime. Salah satu properti penting terkait akses root adalah:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>setprop persist.sys.root_access 1
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">persist.sys.root_access</code>: properti ini mengontrol <strong>akses root pada sistem Android</strong>.</p>
+  </li>
+  <li>
+    <p>Nilai <code class="language-plaintext highlighter-rouge">1</code> berarti akses root diaktifkan.</p>
+  </li>
+  <li>
+    <p>Kata <code class="language-plaintext highlighter-rouge">persist</code> menunjukkan bahwa properti ini <strong>seharusnya disimpan</strong> secara permanen (persisten), dan tetap aktif meskipun perangkat di-reboot.</p>
+  </li>
+</ul>
+
+<p>Namun, <strong>pada emulator seperti LDPlayer</strong>, properti ini <strong>tidak selalu benar-benar bersifat persisten</strong> setelah reboot. Hal ini kemungkinan disebabkan oleh:</p>
+
+<ul>
+  <li>
+    <p>Emulator melakukan <em>reset</em> terhadap sistem properties saat boot.</p>
+  </li>
+  <li>
+    <p>File <code class="language-plaintext highlighter-rouge">build.prop</code> atau <code class="language-plaintext highlighter-rouge">default.prop</code> tidak dapat dimodifikasi permanen.</p>
+  </li>
+  <li>
+    <p>Tidak adanya skrip seperti <code class="language-plaintext highlighter-rouge">init.d</code> untuk menyetel ulang secara otomatis saat startup.</p>
+  </li>
+</ul>
+
+<h3 id="kenapa-perlu-menjalankan-setprop-ulang-setelah-reboot">Kenapa Perlu Menjalankan <code class="language-plaintext highlighter-rouge">setprop</code> Ulang Setelah Reboot?</h3>
+
+<p>Walaupun sudah menggunakan <code class="language-plaintext highlighter-rouge">setprop persist.sys.root_access 1</code>, kenyataannya:</p>
+
+<ul>
+  <li>
+    <p>Akses root tidak otomatis aktif sepenuhnya setelah reboot.</p>
+  </li>
+  <li>
+    <p>Partisi <code class="language-plaintext highlighter-rouge">/system</code> akan kembali dimount dalam mode <code class="language-plaintext highlighter-rouge">ro</code>.</p>
+  </li>
+  <li>
+    <p>Anda tetap perlu menjalankan perintah <code class="language-plaintext highlighter-rouge">setprop</code> <strong>secara manual setiap kali emulator di-reboot</strong>, agar dapat melakukan remount sebagai <code class="language-plaintext highlighter-rouge">rw</code>.</p>
+  </li>
+</ul>
+
+<p>Jadi, untuk membuat <code class="language-plaintext highlighter-rouge">/system</code> bisa ditulis (writeable) di LDPlayer 9:</p>
+
+<ol>
+  <li>
+    <p>Aktifkan kembali akses root dengan <code class="language-plaintext highlighter-rouge">setprop persist.sys.root_access 1</code>.</p>
+  </li>
+  <li>
+    <p>Remount partisi dengan <code class="language-plaintext highlighter-rouge">mount -o remount,rw /</code>.</p>
+  </li>
+</ol>
+
+<p>Meskipun menggunakan properti <code class="language-plaintext highlighter-rouge">persist</code>, emulator kemungkinan <strong>tidak menyimpan</strong> status ini secara permanen. Oleh karena itu, kamu perlu menjalankan perintah ini <strong>setiap kali boot ulang emulator</strong>.</p>
+
+<h3 id="apa-itu-ro-dan-rw">Apa Itu <code class="language-plaintext highlighter-rouge">ro</code> dan <code class="language-plaintext highlighter-rouge">rw</code>?</h3>
+
+<p>Dalam konteks sistem Linux (termasuk Android), saat melakukan <code class="language-plaintext highlighter-rouge">mount</code>, ada dua mode umum:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">ro</code> (<strong>Read-Only</strong>): hanya bisa membaca file/folder, tidak bisa mengubah isinya.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">rw</code> (<strong>Read-Write</strong>): bisa membaca dan menulis file/folder.</p>
+  </li>
+</ul>
+
+<p>Jika sistem dimount dalam mode <code class="language-plaintext highlighter-rouge">ro</code>, semua upaya untuk menyalin atau memodifikasi file akan gagal. Oleh karena itu, kita harus melakukan <strong>remount</strong> menggunakan mode <code class="language-plaintext highlighter-rouge">rw</code>.</p>
+
+<h3 id="solusi">Solusi</h3>
+
+<ol>
+  <li>Aktifkan Akses Root Persisten
+  Hubungkan LDPlayer dengan ADB (bisa dari terminal atau command prompt), lalu jalankan:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nv">$ </span>adb shell
+  <span class="nv">$ </span>su
+  <span class="c"># setprop persist.sys.root_access 1</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Remount Sistem dengan Akses Tulis
+  Setelah akses root aktif, lakukan remount terhadap partisi root:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c"># mount -o remount,rw /</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Untuk memastikan partisi sudah berhasil dimount dalam mode writeable:
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="c"># mount | grep system</span>
+</code></pre></div>    </div>
+    <p>Jika hasil output menunjukkan flag <code class="language-plaintext highlighter-rouge">rw</code>, berarti partisi <code class="language-plaintext highlighter-rouge">/system</code> telah berhasil dimount dengan akses tulis.</p>
+  </li>
+</ol>
+
+<p>Untuk studi kasus dan demonstrasi lengkapnya, silakan lihat video di bawah ini:</p>
+
+<div><div class="extensions extensions--video">
+    <iframe src="https://player.vimeo.com/video/1074541239?h=ab7d4823b2" frameborder="0" allowfullscreen="" allow="autoplay; fullscreen; picture-in-picture">
+    </iframe>
+  </div>
+  </div>
+
+<h3 id="kesimpulan">Kesimpulan</h3>
+
+<p>Masalah “Read-only file system” di LDPlayer 9 dapat diatasi dengan dua langkah utama:</p>
+
+<ol>
+  <li>
+    <p>Mengaktifkan akses root menggunakan <code class="language-plaintext highlighter-rouge">setprop persist.sys.root_access 1</code>.</p>
+  </li>
+  <li>
+    <p>Melakukan remount partisi root ke mode <code class="language-plaintext highlighter-rouge">rw</code>.</p>
+  </li>
+</ol>
+
+<p>Namun, perlu diingat bahwa LDPlayer tidak selalu mempertahankan properti <code class="language-plaintext highlighter-rouge">persist</code> setelah reboot. Maka dari itu, perintah <code class="language-plaintext highlighter-rouge">setprop</code> kemungkinan besar perlu dijalankan ulang setiap kali emulator dinyalakan.</p>
+
+<p class="warning"><strong>Catatan</strong>: Mengedit partisi sistem bisa menyebabkan <strong>kerusakan atau crash</strong> jika dilakukan tanpa pengetahuan yang cukup. Selalu backup file penting sebelum memodifikasi sistem.</p>
+
+<p>Jika kamu mengalami kendala saat mengikuti langkah-langkah di atas, silakan tinggalkan komentar atau kirim pesan langsung. Terima kasih sudah membaca!</p>]]></content><author><name>Ilham</name></author><category term="ldplayer" /><category term="adb" /><category term="ldplayer" /><category term="read-only-filesystem" /><category term="system-partition" /><summary type="html"><![CDATA[Permasalahan Saat mencoba menyalin atau mengedit file di direktori /system pada emulator LDPlayer 9, saya mengalami error berikut: # mv /sdcard/9a5ba575.0 /system/etc/security/cacerts mv: /system/etc/security/cacerts/9a5ba575.0: Read-only file system Padahal pengaturan Root Permission sudah diaktifkan di emulator, namun tetap tidak bisa menyalin file ke partisi /system. Hal ini terjadi karena partisi tersebut masih berada dalam mode read-only secara default. Mengapa ini terjadi? Secara default, sistem Android (termasuk emulator seperti LDPlayer) melakukan mount terhadap direktori /system dalam mode ro (read-only) untuk menjaga integritas file sistem. Ini adalah langkah keamanan agar pengguna atau aplikasi tidak sembarangan mengubah file penting. Untuk bisa memodifikasi direktori ini, kita harus remount partisi tersebut dalam mode rw (read-write), agar sistem mengizinkan perubahan. Apa Itu setprop persist.sys.root_access 1? setprop adalah perintah di sistem Android yang digunakan untuk mengatur system properties secara runtime. Salah satu properti penting terkait akses root adalah: setprop persist.sys.root_access 1 persist.sys.root_access: properti ini mengontrol akses root pada sistem Android. Nilai 1 berarti akses root diaktifkan. Kata persist menunjukkan bahwa properti ini seharusnya disimpan secara permanen (persisten), dan tetap aktif meskipun perangkat di-reboot. Namun, pada emulator seperti LDPlayer, properti ini tidak selalu benar-benar bersifat persisten setelah reboot. Hal ini kemungkinan disebabkan oleh: Emulator melakukan reset terhadap sistem properties saat boot. File build.prop atau default.prop tidak dapat dimodifikasi permanen. Tidak adanya skrip seperti init.d untuk menyetel ulang secara otomatis saat startup. Kenapa Perlu Menjalankan setprop Ulang Setelah Reboot? Walaupun sudah menggunakan setprop persist.sys.root_access 1, kenyataannya: Akses root tidak otomatis aktif sepenuhnya setelah reboot. Partisi /system akan kembali dimount dalam mode ro. Anda tetap perlu menjalankan perintah setprop secara manual setiap kali emulator di-reboot, agar dapat melakukan remount sebagai rw. Jadi, untuk membuat /system bisa ditulis (writeable) di LDPlayer 9: Aktifkan kembali akses root dengan setprop persist.sys.root_access 1. Remount partisi dengan mount -o remount,rw /. Meskipun menggunakan properti persist, emulator kemungkinan tidak menyimpan status ini secara permanen. Oleh karena itu, kamu perlu menjalankan perintah ini setiap kali boot ulang emulator. Apa Itu ro dan rw? Dalam konteks sistem Linux (termasuk Android), saat melakukan mount, ada dua mode umum: ro (Read-Only): hanya bisa membaca file/folder, tidak bisa mengubah isinya. rw (Read-Write): bisa membaca dan menulis file/folder. Jika sistem dimount dalam mode ro, semua upaya untuk menyalin atau memodifikasi file akan gagal. Oleh karena itu, kita harus melakukan remount menggunakan mode rw. Solusi Aktifkan Akses Root Persisten Hubungkan LDPlayer dengan ADB (bisa dari terminal atau command prompt), lalu jalankan: $ adb shell $ su # setprop persist.sys.root_access 1 Remount Sistem dengan Akses Tulis Setelah akses root aktif, lakukan remount terhadap partisi root: # mount -o remount,rw / Untuk memastikan partisi sudah berhasil dimount dalam mode writeable: # mount | grep system Jika hasil output menunjukkan flag rw, berarti partisi /system telah berhasil dimount dengan akses tulis. Untuk studi kasus dan demonstrasi lengkapnya, silakan lihat video di bawah ini: Kesimpulan Masalah “Read-only file system” di LDPlayer 9 dapat diatasi dengan dua langkah utama: Mengaktifkan akses root menggunakan setprop persist.sys.root_access 1. Melakukan remount partisi root ke mode rw. Namun, perlu diingat bahwa LDPlayer tidak selalu mempertahankan properti persist setelah reboot. Maka dari itu, perintah setprop kemungkinan besar perlu dijalankan ulang setiap kali emulator dinyalakan. Catatan: Mengedit partisi sistem bisa menyebabkan kerusakan atau crash jika dilakukan tanpa pengetahuan yang cukup. Selalu backup file penting sebelum memodifikasi sistem. Jika kamu mengalami kendala saat mengikuti langkah-langkah di atas, silakan tinggalkan komentar atau kirim pesan langsung. Terima kasih sudah membaca!]]></summary></entry></feed>
