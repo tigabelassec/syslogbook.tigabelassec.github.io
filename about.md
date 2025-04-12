@@ -4,7 +4,6 @@ titles:
   # @start locale config
   en      : &EN       About
   # @end locale config
-key: page-about
 ---
 Selamat datang di **Syslogbook**! Blog ini adalah tempat saya mencatat segala eksperimen, perubahan, dan konfigurasi sistem yang saya lakukan, terutama dalam konteks penggunaan **Windows** dan **Windows Subsystem for Linux (WSL)**. Sebagai seorang pengguna aktif yang sering kali melakukan pengaturan ulang sistem, saya sering menghadapi tantangan dalam menjaga konfigurasi saya tetap stabil saat bereksperimen dengan berbagai pengaturan dan konfigurasi.
 

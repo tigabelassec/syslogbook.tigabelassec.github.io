@@ -4,7 +4,6 @@ titles:
   # @start locale config
   en      : &EN       Disclaimer
   # @end locale config
-key: page-disclaimer
 ---
 Selamat datang di **Syslogbook**! Blog ini berisi catatan pribadi saya tentang eksperimen, konfigurasi, dan troubleshooting yang saya lakukan pada sistem operasi **Windows** dan **Windows Subsystem for Linux (WSL)**. Semua konten yang ada di blog ini disediakan untuk tujuan informasi dan dokumentasi pribadi.
 
