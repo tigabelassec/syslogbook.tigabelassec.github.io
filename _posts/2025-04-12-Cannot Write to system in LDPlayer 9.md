@@ -3,8 +3,9 @@ author: Ilham
 title: "Fix: Cannot write to /system in LDPlayer 9 (Read-only File System)"
 categories: ldplayer
 tags: [adb, ldplayer, read-only-filesystem, system-partition]
-date: 2025-04-11
+date: 2025-04-12
 summary: 'Fix "Read-only file system" error in LDPlayer 9 when writing to /system. Step-by-step solution to remount /system with write access on Android emulator.'
+key: 2025-04-12-troubleshoot-1
 ---
 
 ### Permasalahan
