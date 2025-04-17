@@ -10,7 +10,7 @@ key: 2025-04-12-troubleshoot-1
 
 ### Permasalahan
 
-Saat mencoba menyalin atau mengedit file di direktori `/system` pada emulator **LDPlayer 9**, saya mengalami error berikut:
+Saat mencoba menyalin file ke direktori `/system` pada emulator **LDPlayer 9**, saya mengalami error berikut:
 
 ```shell
 # mv /sdcard/9a5ba575.0 /system/etc/security/cacerts
