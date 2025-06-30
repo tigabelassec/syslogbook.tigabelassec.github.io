@@ -1,5 +1,268 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="id"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" hreflang="id" /><updated>2025-04-12T16:19:32+07:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Syslogbook</title><subtitle>Syslogbook adalah blog dokumentasi eksperimen, troubleshooting, dan konfigurasi sistem, khususnya di Windows dan WSL. Ditujukan sebagai catatan pribadi yang terstruktur, namun juga bermanfaat bagi siapa saja yang ingin mengatasi masalah teknis dan menjaga kestabilan sistem saat bereksperimen.
-</subtitle><author><name>Ilham</name><email>contact@tigabelassec.my.id</email></author><entry><title type="html">Fix: Cannot write to /system in LDPlayer 9 (Read-only File System)</title><link href="http://0.0.0.0:4000/ldplayer/Cannot-Write-to-system-in-LDPlayer-9/" rel="alternate" type="text/html" title="Fix: Cannot write to /system in LDPlayer 9 (Read-only File System)" /><published>2025-04-12T00:00:00+07:00</published><updated>2025-04-12T00:00:00+07:00</updated><id>http://0.0.0.0:4000/ldplayer/Cannot%20Write%20to%20system%20in%20LDPlayer%209</id><content type="html" xml:base="http://0.0.0.0:4000/ldplayer/Cannot-Write-to-system-in-LDPlayer-9/"><![CDATA[<h3 id="permasalahan">Permasalahan</h3>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="id"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="http://0.0.0.0:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://0.0.0.0:4000/" rel="alternate" type="text/html" hreflang="id" /><updated>2025-07-01T00:51:36+07:00</updated><id>http://0.0.0.0:4000/feed.xml</id><title type="html">Syslogbook</title><subtitle>Syslogbook adalah blog dokumentasi eksperimen, troubleshooting, dan konfigurasi sistem, khususnya di Windows dan WSL. Ditujukan sebagai catatan pribadi yang terstruktur, namun juga bermanfaat bagi siapa saja yang ingin mengatasi masalah teknis dan menjaga kestabilan sistem saat bereksperimen.
+</subtitle><author><name>Ilham</name><email>contact@tigabelassec.my.id</email></author><entry><title type="html">Port Forwarding di WSL2: Akses SSH dari Host dan Jaringan Lokal</title><link href="http://0.0.0.0:4000/wsl2/Port-Forwarding-di-WSL2/" rel="alternate" type="text/html" title="Port Forwarding di WSL2: Akses SSH dari Host dan Jaringan Lokal" /><published>2025-07-01T00:00:00+07:00</published><updated>2025-07-01T00:00:00+07:00</updated><id>http://0.0.0.0:4000/wsl2/Port%20Forwarding%20di%20WSL2</id><content type="html" xml:base="http://0.0.0.0:4000/wsl2/Port-Forwarding-di-WSL2/"><![CDATA[<p><img src="/assets/images/wsl2-ssh-cover.png" alt="WSL2 SSH" title="WSL2 SSH" /></p>
+
+<p>WSL2 (Windows Subsystem for Linux versi 2) memungkinkan kita menjalankan Linux secara native di Windows. Namun, secara default, WSL2 menggunakan virtual network dengan IP yang berubah-ubah dan tidak langsung bisa diakses dari komputer lain di jaringan lokal.</p>
+
+<p>Di artikel ini, kita bakal kulik cara gampang agar WSL2 bisa diakses lewat <strong>SSH</strong>. Ini sangat berguna jika Anda ingin melakukan <em>remote development</em> dari laptop lain, mengelola server kecil di WSL2 dari tablet, atau sekedar ingin memisahkan lingkungan kerja Anda. Kita akan lakukan dengan:</p>
+
+<ul>
+  <li><strong>Set port forwarding di Windows</strong> — supaya koneksi dari luar diarahkan ke WSL2.</li>
+  <li><strong>Buka port di Windows Firewall</strong> — supaya akses SSH-nya nggak terblokir.</li>
+</ul>
+
+<p>Langsung aja kita mulai dari langkah pertama.</p>
+
+<h2 id="1-instalasi-dan-aktivasi-ssh-server-di-wsl2">1. Instalasi dan Aktivasi SSH Server di WSL2</h2>
+
+<h3 id="install-ssh-server">Install SSH Server</h3>
+
+<p>Masuk ke terminal WSL2, lalu jalankan perintah berikut untuk update dan install SSH server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt <span class="nb">install </span>openssh-server
+</code></pre></div></div>
+
+<h3 id="aktifkan-ssh-server">Aktifkan SSH Server</h3>
+
+<p>Untuk memulai service SSH, jalankan:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service ssh start
+</code></pre></div></div>
+
+<p>Cek status SSH:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service ssh status
+</code></pre></div></div>
+
+<p>Jika statusnya <code class="language-plaintext highlighter-rouge">sshd is running.</code> atau <code class="language-plaintext highlighter-rouge">active (running)</code>, berarti SSH server sudah aktif. Jika tertulis <code class="language-plaintext highlighter-rouge">sshd is not running ... failed!</code> atau <code class="language-plaintext highlighter-rouge">inactive (dead)</code>, jalankan ulang <code class="language-plaintext highlighter-rouge">sudo service ssh start</code>.</p>
+
+<p><strong>Beberapa perintah lain yang berguna:</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">sudo service ssh stop</code> — Mematikan SSH server</li>
+  <li><code class="language-plaintext highlighter-rouge">sudo service ssh restart</code> — Me-restart service SSH</li>
+</ul>
+
+<h3 id="opsional-ganti-port-default">(Opsional) Ganti Port Default</h3>
+
+<p>Edit file konfigurasi:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nano /etc/ssh/sshd_config
+</code></pre></div></div>
+
+<p>Ubah:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#Port 22</span>
+</code></pre></div></div>
+
+<p>Menjadi:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Port 2222
+</code></pre></div></div>
+
+<p>Simpan lalu restart SSH:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service ssh restart
+</code></pre></div></div>
+
+<h2 id="2-cek-ip-wsl2">2. Cek IP WSL2</h2>
+
+<p>Jalankan perintah:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">hostname</span> <span class="nt">-I</span>
+</code></pre></div></div>
+
+<p>Contoh output:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>172.22.xxx.xx
+</code></pre></div></div>
+
+<p class="warning"><strong>Catatan:</strong> IP ini bisa berubah setiap kali WSL2 direstart. Jadi, <strong>perlu diperbarui juga di konfigurasi portproxy Windows jika berubah</strong>.</p>
+
+<h2 id="3-konfigurasi-port-forwarding-di-windows">3. Konfigurasi Port Forwarding di Windows</h2>
+
+<p>Windows perlu meneruskan koneksi dari port tertentu (misalnya 2222) ke IP dan port SSH WSL2.</p>
+
+<h3 id="mengecek-portproxy-yang-aktif">Mengecek Portproxy yang Aktif</h3>
+
+<p>Buka PowerShell sebagai Administrator, karena perintah <code class="language-plaintext highlighter-rouge">netsh</code> dan <code class="language-plaintext highlighter-rouge">New-NetFirewallRule</code> memerlukan hak akses tinggi untuk mengubah konfigurasi jaringan dan keamanan di Windows.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">netsh</span><span class="w"> </span><span class="nx">interface</span><span class="w"> </span><span class="nx">portproxy</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">all</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Contoh output:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Listen</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">ipv4:</span><span class="w">             </span><span class="nx">Connect</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">ipv4:</span><span class="w">
+</span><span class="n">Address</span><span class="w">         </span><span class="nx">Port</span><span class="w">        </span><span class="nx">Address</span><span class="w">         </span><span class="nx">Port</span><span class="w">
+</span><span class="o">---------------</span><span class="w"> </span><span class="o">----------</span><span class="w">  </span><span class="o">---------------</span><span class="w"> </span><span class="o">----------</span><span class="w">
+</span><span class="mf">0.0</span><span class="o">.</span><span class="nf">0</span><span class="o">.</span><span class="nf">0</span><span class="w">         </span><span class="mi">2222</span><span class="w">        </span><span class="mf">172.22</span><span class="o">.</span><span class="nf">134</span><span class="o">.</span><span class="nf">101</span><span class="w">  </span><span class="mi">2222</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="tambah-rule-port-forwarding">Tambah Rule Port Forwarding</h3>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">netsh</span><span class="w"> </span><span class="nx">interface</span><span class="w"> </span><span class="nx">portproxy</span><span class="w"> </span><span class="nx">add</span><span class="w"> </span><span class="nx">v4tov4</span><span class="w"> </span><span class="nx">listenport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">listenaddress</span><span class="o">=</span><span class="mf">0.0</span><span class="o">.</span><span class="nf">0</span><span class="o">.</span><span class="nf">0</span><span class="w"> </span><span class="n">connectport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">connectaddress</span><span class="o">=</span><span class="mf">172.22</span><span class="o">.</span><span class="nf">xxx</span><span class="o">.</span><span class="nf">xx</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">listenport</code>: Port di sisi Windows</li>
+  <li><code class="language-plaintext highlighter-rouge">listenaddress</code>: <code class="language-plaintext highlighter-rouge">0.0.0.0</code> agar bisa diakses dari komputer lain</li>
+  <li><code class="language-plaintext highlighter-rouge">connectaddress</code>: IP WSL2 (hasil dari <code class="language-plaintext highlighter-rouge">hostname -I</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">connectport</code>: Port SSH yang digunakan (22 atau 2222)</li>
+</ul>
+
+<h3 id="opsional-hapus-rule-port-forwarding">(Opsional) Hapus Rule Port Forwarding</h3>
+
+<p>Karena IP nya tidak konsisten, mungkin kita perlu menambahkan rule ulang untuk port forwarding.
+Sebelum menambahkan rule lagi alangkah baiknya kita hapus dulu rule yang sudah ada agar tidak menumpuk.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">netsh</span><span class="w"> </span><span class="nx">interface</span><span class="w"> </span><span class="nx">portproxy</span><span class="w"> </span><span class="nx">delete</span><span class="w"> </span><span class="nx">v4tov4</span><span class="w"> </span><span class="nx">listenport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">listenaddress</span><span class="o">=</span><span class="mf">0.0</span><span class="o">.</span><span class="nf">0</span><span class="o">.</span><span class="nf">0</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="4-pengaturan-firewall-windows">4. Pengaturan Firewall Windows</h2>
+
+<p>Agar komputer lain bisa terhubung ke port forwarding tadi, kita perlu membuka port di firewall Windows.</p>
+
+<h3 id="mengecek-rule-firewall-yang-ada">Mengecek rule firewall yang ada</h3>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Get-NetFirewallRule</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Where-Object</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="bp">$_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Get-NetFirewallPortFilter</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Where-Object</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="bp">$_</span><span class="o">.</span><span class="nf">LocalPort</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="mi">2222</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Jika tidak ada hasil, berarti port belum dibuka.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Get-NetFirewallRule</code>: Mengambil semua rule firewall yang ada.</li>
+  <li><code class="language-plaintext highlighter-rouge">Where-Object { ... }</code>: Filter untuk mencari rule yang menggunakan <strong>port 2222</strong>.</li>
+  <li><code class="language-plaintext highlighter-rouge">Get-NetFirewallPortFilter</code>: Menampilkan properti port dari setiap rule.</li>
+  <li><code class="language-plaintext highlighter-rouge">LocalPort -eq 2222</code>: Hanya menampilkan rule yang menggunakan port 2222 secara lokal.</li>
+</ul>
+
+<p><strong>Gunanya:</strong> untuk memastikan apakah sudah ada rule firewall untuk port 2222 sebelum kita buat yang baru.</p>
+
+<h3 id="membuat-rule-firewall-baru-membuka-port-2222">Membuat rule firewall baru (membuka port 2222)</h3>
+
+<p>Jika belum dibuka jadi kita harus membuat rule firewall baru.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">New-NetFirewallRule</span><span class="w"> </span><span class="nt">-DisplayName</span><span class="w"> </span><span class="s2">"WSL2 SSH External"</span><span class="w"> </span><span class="nt">-Direction</span><span class="w"> </span><span class="nx">Inbound</span><span class="w"> </span><span class="nt">-LocalPort</span><span class="w"> </span><span class="nx">2222</span><span class="w"> </span><span class="nt">-Protocol</span><span class="w"> </span><span class="nx">TCP</span><span class="w"> </span><span class="nt">-Action</span><span class="w"> </span><span class="nx">Allow</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">New-NetFirewallRule</code>: Membuat rule firewall baru.</li>
+  <li><code class="language-plaintext highlighter-rouge">-DisplayName</code>: Nama yang ditampilkan untuk rule ini di Windows Firewall.</li>
+  <li><code class="language-plaintext highlighter-rouge">-Direction Inbound</code>: Rule ini untuk <strong>lalu lintas masuk</strong> ke komputer.</li>
+  <li><code class="language-plaintext highlighter-rouge">-LocalPort 2222</code>: Membuka <strong>port 2222</strong> agar bisa menerima koneksi masuk.</li>
+  <li><code class="language-plaintext highlighter-rouge">-Protocol TCP</code>: Rule ini berlaku untuk protokol <strong>TCP</strong>.</li>
+  <li><code class="language-plaintext highlighter-rouge">-Action Allow</code>: Mengizinkan koneksi yang cocok dengan rule ini.</li>
+</ul>
+
+<p><strong>Gunanya:</strong> Mengizinkan koneksi masuk ke port 2222 — port tempat WSL2 menerima SSH.</p>
+
+<h3 id="menonaktifkan-rule-firewall-tanpa-menghapusnya">Menonaktifkan rule firewall (tanpa menghapusnya)</h3>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Set-NetFirewallRule</span><span class="w"> </span><span class="nt">-DisplayName</span><span class="w"> </span><span class="s2">"WSL2 SSH External"</span><span class="w"> </span><span class="nt">-Enabled</span><span class="w"> </span><span class="nx">False</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Set-NetFirewallRule</code>: Mengubah properti dari rule firewall yang ada.</li>
+  <li><code class="language-plaintext highlighter-rouge">-DisplayName</code>: Menargetkan rule berdasarkan nama (harus sama persis).</li>
+  <li><code class="language-plaintext highlighter-rouge">-Enabled False</code>: Menonaktifkan rule tanpa menghapusnya.</li>
+</ul>
+
+<p><strong>Gunanya:</strong> Berguna jika kamu ingin <strong>sementara memblokir akses</strong> ke port 2222 tanpa kehilangan konfigurasi rule yang sudah dibuat.</p>
+
+<h3 id="mengaktifkan-kembali-rule-yang-sudah-dinonaktifkan">Mengaktifkan kembali rule yang sudah dinonaktifkan</h3>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Set-NetFirewallRule</span><span class="w"> </span><span class="nt">-DisplayName</span><span class="w"> </span><span class="s2">"WSL2 SSH External"</span><span class="w"> </span><span class="nt">-Enabled</span><span class="w"> </span><span class="nx">True</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li>Sama seperti sebelumnya, tapi <code class="language-plaintext highlighter-rouge">-Enabled True</code> untuk mengaktifkan kembali rule yang sudah ada.</li>
+</ul>
+
+<p><strong>Gunanya:</strong> Mengaktifkan ulang akses port SSH jika sebelumnya kamu nonaktifkan dengan <code class="language-plaintext highlighter-rouge">Enabled False</code>.</p>
+
+<h3 id="menghapus-rule-firewall-secara-permanen">Menghapus rule firewall secara permanen</h3>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Remove-NetFirewallRule</span><span class="w"> </span><span class="nt">-DisplayName</span><span class="w"> </span><span class="s2">"WSL2 SSH External"</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Remove-NetFirewallRule</code>: Menghapus rule firewall berdasarkan nama.</li>
+  <li><code class="language-plaintext highlighter-rouge">-DisplayName</code>: Nama dari rule yang ingin dihapus.</li>
+</ul>
+
+<p><strong>Gunanya:</strong> Menghapus rule secara permanen dari Windows Firewall. Setelah ini, koneksi ke port 2222 akan ditolak kecuali kamu buat rule baru lagi.</p>
+
+<h3 id="melihat-semua-rule-firewall">Melihat Semua Rule Firewall</h3>
+
+<p>Kalau ingin melihat semua rule firewall yang aktif atau nonaktif:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Get-NetFirewallRule</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Format-Table</span><span class="w"> </span><span class="nx">Name</span><span class="p">,</span><span class="w"> </span><span class="nx">DisplayName</span><span class="p">,</span><span class="w"> </span><span class="nx">Enabled</span><span class="p">,</span><span class="w"> </span><span class="nx">Direction</span><span class="p">,</span><span class="w"> </span><span class="nx">Action</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="5-testing-koneksi-ssh">5. Testing Koneksi SSH</h2>
+
+<h3 id="dari-windows-host-localhost">Dari Windows Host (localhost)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh user@localhost <span class="nt">-p</span> 2222
+</code></pre></div></div>
+
+<h3 id="dari-komputer-lain-di-jaringan-yang-sama-lokal">Dari Komputer Lain di Jaringan yang sama (Lokal)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh user@192.168.x.x <span class="nt">-p</span> 2222
+</code></pre></div></div>
+
+<h3 id="menggunakan-putty">Menggunakan PuTTY</h3>
+
+<ul>
+  <li>Hostname: <code class="language-plaintext highlighter-rouge">localhost</code> atau IP LAN Windows</li>
+  <li>Port: <code class="language-plaintext highlighter-rouge">2222</code></li>
+  <li>Connection type: SSH</li>
+</ul>
+
+<h2 id="6-troubleshooting">6. Troubleshooting</h2>
+
+<p>Tidak menutup kemungkinan jika kita akan mengalami error saat melakukan konfigurasi.
+Jadi jika terdapat error seperti <code class="language-plaintext highlighter-rouge">kex_exchange_identification: read: Connection reset by peer</code> coba solusi dibawah ini.</p>
+
+<p><strong>Solusi:</strong></p>
+
+<ul>
+  <li>Pastikan IP WSL2 belum berubah → cek ulang <code class="language-plaintext highlighter-rouge">hostname -I</code></li>
+  <li>Restart SSH di WSL2:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service ssh restart
+</code></pre></div></div>
+
+<ul>
+  <li>Restart <em>IP Helper Service</em> di Windows:</li>
+</ul>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Restart-Service</span><span class="w"> </span><span class="nx">iphlpsvc</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li>Pastikan firewall tidak memblokir port 2222</li>
+  <li>Nonaktifkan antivirus/VPN sementara untuk memastikan tidak ada yang menghalangi koneksi</li>
+</ul>
+
+<h2 id="7-tips-tambahan">7. Tips Tambahan</h2>
+
+<h3 id="script-otomatis-port-forwarding-powershell">Script Otomatis Port Forwarding (PowerShell)</h3>
+
+<p>Kamu bisa menggunakan skrip berikut untuk menyegarkan konfigurasi setiap kali IP WSL2 berubah:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$wslIp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">wsl</span><span class="w"> </span><span class="nx">hostname</span><span class="w"> </span><span class="nt">-I</span><span class="p">)</span><span class="o">.</span><span class="nf">Trim</span><span class="p">()</span><span class="w">
+</span><span class="nx">netsh</span><span class="w"> </span><span class="nx">interface</span><span class="w"> </span><span class="nx">portproxy</span><span class="w"> </span><span class="nx">delete</span><span class="w"> </span><span class="nx">v4tov4</span><span class="w"> </span><span class="nx">listenport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">listenaddress</span><span class="o">=</span><span class="mf">0.0</span><span class="o">.</span><span class="nf">0</span><span class="o">.</span><span class="nf">0</span><span class="w">
+</span><span class="n">netsh</span><span class="w"> </span><span class="nx">interface</span><span class="w"> </span><span class="nx">portproxy</span><span class="w"> </span><span class="nx">add</span><span class="w"> </span><span class="nx">v4tov4</span><span class="w"> </span><span class="nx">listenport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">listenaddress</span><span class="o">=</span><span class="mf">0.0</span><span class="o">.</span><span class="nf">0</span><span class="o">.</span><span class="nf">0</span><span class="w"> </span><span class="n">connectport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">connectaddress</span><span class="o">=</span><span class="nv">$wslIp</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="info"><strong>Opsional:</strong> Tambahkan skrip ini ke <strong>Task Scheduler</strong> agar dijalankan otomatis saat login/startup.</p>
+
+<h2 id="kesimpulan">Kesimpulan</h2>
+
+<p>Dengan mengatur port forwarding dan membuka firewall di Windows, kamu bisa mengakses WSL2 via SSH dari komputer lain di jaringan lokal. Ini membuat WSL2 jauh lebih fleksibel dan bisa digunakan layaknya server Linux sungguhan.</p>
+
+<p>Kalau kamu punya pertanyaan atau mengalami kendala saat menerapkan panduan ini, silakan tinggalkan komentar atau kirim pesan langsung. Terima kasih sudah membaca!</p>]]></content><author><name>Ilham</name></author><category term="WSL2" /><category term="wsl2" /><category term="ssh" /><category term="windows" /><category term="port-forwarding" /><category term="jaringan" /><summary type="html"><![CDATA[WSL2 (Windows Subsystem for Linux versi 2) memungkinkan kita menjalankan Linux secara native di Windows. Namun, secara default, WSL2 menggunakan virtual network dengan IP yang berubah-ubah dan tidak langsung bisa diakses dari komputer lain di jaringan lokal. Di artikel ini, kita bakal kulik cara gampang agar WSL2 bisa diakses lewat SSH. Ini sangat berguna jika Anda ingin melakukan remote development dari laptop lain, mengelola server kecil di WSL2 dari tablet, atau sekedar ingin memisahkan lingkungan kerja Anda. Kita akan lakukan dengan: Set port forwarding di Windows — supaya koneksi dari luar diarahkan ke WSL2. Buka port di Windows Firewall — supaya akses SSH-nya nggak terblokir. Langsung aja kita mulai dari langkah pertama. 1. Instalasi dan Aktivasi SSH Server di WSL2 Install SSH Server Masuk ke terminal WSL2, lalu jalankan perintah berikut untuk update dan install SSH server: sudo apt update &amp;&amp; sudo apt install openssh-server Aktifkan SSH Server Untuk memulai service SSH, jalankan: sudo service ssh start Cek status SSH: sudo service ssh status Jika statusnya sshd is running. atau active (running), berarti SSH server sudah aktif. Jika tertulis sshd is not running ... failed! atau inactive (dead), jalankan ulang sudo service ssh start. Beberapa perintah lain yang berguna: sudo service ssh stop — Mematikan SSH server sudo service ssh restart — Me-restart service SSH (Opsional) Ganti Port Default Edit file konfigurasi: sudo nano /etc/ssh/sshd_config Ubah: #Port 22 Menjadi: Port 2222 Simpan lalu restart SSH: sudo service ssh restart 2. Cek IP WSL2 Jalankan perintah: hostname -I Contoh output: 172.22.xxx.xx Catatan: IP ini bisa berubah setiap kali WSL2 direstart. Jadi, perlu diperbarui juga di konfigurasi portproxy Windows jika berubah. 3. Konfigurasi Port Forwarding di Windows Windows perlu meneruskan koneksi dari port tertentu (misalnya 2222) ke IP dan port SSH WSL2. Mengecek Portproxy yang Aktif Buka PowerShell sebagai Administrator, karena perintah netsh dan New-NetFirewallRule memerlukan hak akses tinggi untuk mengubah konfigurasi jaringan dan keamanan di Windows. netsh interface portproxy show all Contoh output: Listen on ipv4: Connect to ipv4: Address Port Address Port --------------- ---------- --------------- ---------- 0.0.0.0 2222 172.22.134.101 2222 Tambah Rule Port Forwarding netsh interface portproxy add v4tov4 listenport=2222 listenaddress=0.0.0.0 connectport=2222 connectaddress=172.22.xxx.xx listenport: Port di sisi Windows listenaddress: 0.0.0.0 agar bisa diakses dari komputer lain connectaddress: IP WSL2 (hasil dari hostname -I) connectport: Port SSH yang digunakan (22 atau 2222) (Opsional) Hapus Rule Port Forwarding Karena IP nya tidak konsisten, mungkin kita perlu menambahkan rule ulang untuk port forwarding. Sebelum menambahkan rule lagi alangkah baiknya kita hapus dulu rule yang sudah ada agar tidak menumpuk. netsh interface portproxy delete v4tov4 listenport=2222 listenaddress=0.0.0.0 4. Pengaturan Firewall Windows Agar komputer lain bisa terhubung ke port forwarding tadi, kita perlu membuka port di firewall Windows. Mengecek rule firewall yang ada Get-NetFirewallRule | Where-Object { $_ | Get-NetFirewallPortFilter | Where-Object { $_.LocalPort -eq 2222 } } Jika tidak ada hasil, berarti port belum dibuka. Get-NetFirewallRule: Mengambil semua rule firewall yang ada. Where-Object { ... }: Filter untuk mencari rule yang menggunakan port 2222. Get-NetFirewallPortFilter: Menampilkan properti port dari setiap rule. LocalPort -eq 2222: Hanya menampilkan rule yang menggunakan port 2222 secara lokal. Gunanya: untuk memastikan apakah sudah ada rule firewall untuk port 2222 sebelum kita buat yang baru. Membuat rule firewall baru (membuka port 2222) Jika belum dibuka jadi kita harus membuat rule firewall baru. New-NetFirewallRule -DisplayName "WSL2 SSH External" -Direction Inbound -LocalPort 2222 -Protocol TCP -Action Allow New-NetFirewallRule: Membuat rule firewall baru. -DisplayName: Nama yang ditampilkan untuk rule ini di Windows Firewall. -Direction Inbound: Rule ini untuk lalu lintas masuk ke komputer. -LocalPort 2222: Membuka port 2222 agar bisa menerima koneksi masuk. -Protocol TCP: Rule ini berlaku untuk protokol TCP. -Action Allow: Mengizinkan koneksi yang cocok dengan rule ini. Gunanya: Mengizinkan koneksi masuk ke port 2222 — port tempat WSL2 menerima SSH. Menonaktifkan rule firewall (tanpa menghapusnya) Set-NetFirewallRule -DisplayName "WSL2 SSH External" -Enabled False Set-NetFirewallRule: Mengubah properti dari rule firewall yang ada. -DisplayName: Menargetkan rule berdasarkan nama (harus sama persis). -Enabled False: Menonaktifkan rule tanpa menghapusnya. Gunanya: Berguna jika kamu ingin sementara memblokir akses ke port 2222 tanpa kehilangan konfigurasi rule yang sudah dibuat. Mengaktifkan kembali rule yang sudah dinonaktifkan Set-NetFirewallRule -DisplayName "WSL2 SSH External" -Enabled True Sama seperti sebelumnya, tapi -Enabled True untuk mengaktifkan kembali rule yang sudah ada. Gunanya: Mengaktifkan ulang akses port SSH jika sebelumnya kamu nonaktifkan dengan Enabled False. Menghapus rule firewall secara permanen Remove-NetFirewallRule -DisplayName "WSL2 SSH External" Remove-NetFirewallRule: Menghapus rule firewall berdasarkan nama. -DisplayName: Nama dari rule yang ingin dihapus. Gunanya: Menghapus rule secara permanen dari Windows Firewall. Setelah ini, koneksi ke port 2222 akan ditolak kecuali kamu buat rule baru lagi. Melihat Semua Rule Firewall Kalau ingin melihat semua rule firewall yang aktif atau nonaktif: Get-NetFirewallRule | Format-Table Name, DisplayName, Enabled, Direction, Action 5. Testing Koneksi SSH Dari Windows Host (localhost) ssh user@localhost -p 2222 Dari Komputer Lain di Jaringan yang sama (Lokal) ssh user@192.168.x.x -p 2222 Menggunakan PuTTY Hostname: localhost atau IP LAN Windows Port: 2222 Connection type: SSH 6. Troubleshooting Tidak menutup kemungkinan jika kita akan mengalami error saat melakukan konfigurasi. Jadi jika terdapat error seperti kex_exchange_identification: read: Connection reset by peer coba solusi dibawah ini. Solusi: Pastikan IP WSL2 belum berubah → cek ulang hostname -I Restart SSH di WSL2: sudo service ssh restart Restart IP Helper Service di Windows: Restart-Service iphlpsvc Pastikan firewall tidak memblokir port 2222 Nonaktifkan antivirus/VPN sementara untuk memastikan tidak ada yang menghalangi koneksi 7. Tips Tambahan Script Otomatis Port Forwarding (PowerShell) Kamu bisa menggunakan skrip berikut untuk menyegarkan konfigurasi setiap kali IP WSL2 berubah: $wslIp = (wsl hostname -I).Trim() netsh interface portproxy delete v4tov4 listenport=2222 listenaddress=0.0.0.0 netsh interface portproxy add v4tov4 listenport=2222 listenaddress=0.0.0.0 connectport=2222 connectaddress=$wslIp Opsional: Tambahkan skrip ini ke Task Scheduler agar dijalankan otomatis saat login/startup. Kesimpulan Dengan mengatur port forwarding dan membuka firewall di Windows, kamu bisa mengakses WSL2 via SSH dari komputer lain di jaringan lokal. Ini membuat WSL2 jauh lebih fleksibel dan bisa digunakan layaknya server Linux sungguhan. Kalau kamu punya pertanyaan atau mengalami kendala saat menerapkan panduan ini, silakan tinggalkan komentar atau kirim pesan langsung. Terima kasih sudah membaca!]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://0.0.0.0:4000/assets/images/wsl2-ssh-cover.png" /><media:content medium="image" url="http://0.0.0.0:4000/assets/images/wsl2-ssh-cover.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Fix: Cannot write to /system in LDPlayer 9 (Read-only File System)</title><link href="http://0.0.0.0:4000/ldplayer/Cannot-Write-to-system-in-LDPlayer-9/" rel="alternate" type="text/html" title="Fix: Cannot write to /system in LDPlayer 9 (Read-only File System)" /><published>2025-04-12T00:00:00+07:00</published><updated>2025-04-12T00:00:00+07:00</updated><id>http://0.0.0.0:4000/ldplayer/Cannot%20Write%20to%20system%20in%20LDPlayer%209</id><content type="html" xml:base="http://0.0.0.0:4000/ldplayer/Cannot-Write-to-system-in-LDPlayer-9/"><![CDATA[<h3 id="permasalahan">Permasalahan</h3>
 
 <p>Saat mencoba menyalin atau mengedit file di direktori <code class="language-plaintext highlighter-rouge">/system</code> pada emulator <strong>LDPlayer 9</strong>, saya mengalami error berikut:</p>
 

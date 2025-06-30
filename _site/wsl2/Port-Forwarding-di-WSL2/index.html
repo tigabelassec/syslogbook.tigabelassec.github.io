@@ -1,11 +1,10 @@
 <!DOCTYPE html><html lang="id">
   <head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Archive - Syslogbook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Port Forwarding di WSL2: Akses SSH dari Host dan Jaringan Lokal - Syslogbook</title>
 
-<meta name="description" content="Syslogbook adalah blog dokumentasi eksperimen, troubleshooting, dan konfigurasi sistem, khususnya di Windows dan WSL. Ditujukan sebagai catatan pribadi yang terstruktur, namun juga bermanfaat bagi siapa saja yang ingin mengatasi masalah teknis dan menjaga kestabilan sistem saat bereksperimen.
-">
-<link rel="canonical" href="http://0.0.0.0:4000/archive/"><link rel="alternate" type="application/rss+xml" title="Syslogbook" href="/feed.xml"><!-- start favicons snippet, use https://realfavicongenerator.net/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"><link rel="manifest" href="/assets/site.webmanifest"><link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#fc4d50"><link rel="shortcut icon" href="/assets/favicon.ico">
+<meta name="description" content="WSL2 (Windows Subsystem for Linux versi 2) memungkinkan kita menjalankan Linux secara native di Windows. Namun, secara default, WSL2 menggunakan virtual netw...">
+<link rel="canonical" href="http://0.0.0.0:4000/wsl2/Port-Forwarding-di-WSL2/"><link rel="alternate" type="application/rss+xml" title="Syslogbook" href="/feed.xml"><!-- start favicons snippet, use https://realfavicongenerator.net/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"><link rel="manifest" href="/assets/site.webmanifest"><link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#fc4d50"><link rel="shortcut icon" href="/assets/favicon.ico">
 
 <meta name="msapplication-TileColor" content="#ffc40d"><meta name="msapplication-config" content="/assets/browserconfig.xml">
 
@@ -17,19 +16,19 @@
 
 
 <!-- Open Graph Meta Tags -->
-<meta property="og:title" content="Syslogbook" />
+<meta property="og:title" content="Port Forwarding di WSL2: Akses SSH dari Host dan Jaringan Lokal" />
 <meta property="og:description" content="Syslogbook adalah blog dokumentasi eksperimen, troubleshooting, dan konfigurasi sistem, khususnya di Windows dan WSL. Ditujukan sebagai catatan pribadi yang terstruktur, namun juga bermanfaat bagi siapa saja yang ingin mengatasi masalah teknis dan menjaga kestabilan sistem saat bereksperimen.
 " />
-<meta property="og:url" content="http://0.0.0.0:4000/archive/" />
+<meta property="og:url" content="http://0.0.0.0:4000/wsl2/Port-Forwarding-di-WSL2/" />
 <meta property="og:type" content="article" />
-<meta property="og:image" content="http://0.0.0.0:4000/assets/images/default.png" />
+<meta property="og:image" content="http://0.0.0.0:4000/assets/images/wsl2-ssh-cover.png" />
 
 <!-- Twitter Card Meta Tags -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Syslogbook" />
+<meta name="twitter:title" content="Port Forwarding di WSL2: Akses SSH dari Host dan Jaringan Lokal" />
 <meta name="twitter:description" content="Syslogbook adalah blog dokumentasi eksperimen, troubleshooting, dan konfigurasi sistem, khususnya di Windows dan WSL. Ditujukan sebagai catatan pribadi yang terstruktur, namun juga bermanfaat bagi siapa saja yang ingin mengatasi masalah teknis dan menjaga kestabilan sistem saat bereksperimen.
 " />
-<meta name="twitter:image" content="http://0.0.0.0:4000/assets/images/default.png" />
+<meta name="twitter:image" content="http://0.0.0.0:4000/assets/images/wsl2-ssh-cover.png" />
 <!-- end custom head snippets --><script>(function() {
   window.isArray = function(val) {
     return Object.prototype.toString.call(val) === '[object Array]';
@@ -272,7 +271,7 @@
 </head>
   <body>
     <div class="root" data-is-touch="false">
-      <div class="layout--page js-page-root"><div class="page__main js-page-main page__viewport cell cell--auto">
+      <div class="layout--page js-page-root"><div class="page__main js-page-main page__viewport has-aside cell cell--auto">
 
       <div class="page__main-inner"><div class="page__header d-print-none"><header class="header"><div class="main">
       <div class="header__title">
@@ -285,192 +284,347 @@
   </header>
 </div><div class="page__content"><div class ="main"><div class="grid grid--reverse">
 
-              <div class="col-aside d-print-none js-col-aside"></div>
+              <div class="col-aside d-print-none js-col-aside"><aside class="page__aside js-page-aside"><div class="toc-aside js-toc-root"></div>
+</aside></div>
 
               <div class="col-main cell cell--auto"><!-- start custom main top snippet -->
 
 <!-- end custom main top snippet -->
-<article itemscope itemtype="http://schema.org/WebPage"><div class="article__header"><header><h1>Archive</h1></header></div><meta itemprop="headline" content="Archive"><meta itemprop="author" content="Ilham"/><div class="js-article-content"><div class="layout--archive js-all"><div class="site-tags js-tags">
-  <ul class="menu">
-    <li>
-      <button type="button" class="button button--secondary button--pill tag-button tag-button--all" data-encode="">
-        Show All<div class="tag-button__count">2</div>
-      </button>
-    </li><li><button type="button" class="button button--pill tag-button tag-button-1" data-encode="adb">
-          <span>adb</span><div class="tag-button__count">1</div>
-        </button>
-      </li><li><button type="button" class="button button--pill tag-button tag-button-1" data-encode="jaringan">
-          <span>jaringan</span><div class="tag-button__count">1</div>
-        </button>
-      </li><li><button type="button" class="button button--pill tag-button tag-button-1" data-encode="ldplayer">
-          <span>ldplayer</span><div class="tag-button__count">1</div>
-        </button>
-      </li><li><button type="button" class="button button--pill tag-button tag-button-1" data-encode="port-forwarding">
-          <span>port-forwarding</span><div class="tag-button__count">1</div>
-        </button>
-      </li><li><button type="button" class="button button--pill tag-button tag-button-1" data-encode="read-only-filesystem">
-          <span>read-only-filesystem</span><div class="tag-button__count">1</div>
-        </button>
-      </li><li><button type="button" class="button button--pill tag-button tag-button-1" data-encode="ssh">
-          <span>ssh</span><div class="tag-button__count">1</div>
-        </button>
-      </li><li><button type="button" class="button button--pill tag-button tag-button-1" data-encode="system-partition">
-          <span>system-partition</span><div class="tag-button__count">1</div>
-        </button>
-      </li><li><button type="button" class="button button--pill tag-button tag-button-1" data-encode="windows">
-          <span>windows</span><div class="tag-button__count">1</div>
-        </button>
-      </li><li><button type="button" class="button button--pill tag-button tag-button-1" data-encode="wsl2">
-          <span>wsl2</span><div class="tag-button__count">1</div>
-        </button>
-      </li></ul>
+<article itemscope itemtype="http://schema.org/Article"><div class="article__header"><header><h1>Port Forwarding di WSL2: Akses SSH dari Host dan Jaringan Lokal</h1></header></div><meta itemprop="headline" content="Port Forwarding di WSL2: Akses SSH dari Host dan Jaringan Lokal"><div class="article__info clearfix"><ul class="left-col menu"><li>
+              <a class="button button--secondary button--pill button--sm"
+                href="/archive?tag=wsl2">wsl2</a>
+            </li><li>
+              <a class="button button--secondary button--pill button--sm"
+                href="/archive?tag=ssh">ssh</a>
+            </li><li>
+              <a class="button button--secondary button--pill button--sm"
+                href="/archive?tag=windows">windows</a>
+            </li><li>
+              <a class="button button--secondary button--pill button--sm"
+                href="/archive?tag=port-forwarding">port-forwarding</a>
+            </li><li>
+              <a class="button button--secondary button--pill button--sm"
+                href="/archive?tag=jaringan">jaringan</a>
+            </li></ul><ul class="right-col menu"><li><i class="fas fa-user"></i> <span>Ilham</span></li><li><i class="far fa-calendar-alt"></i> <span>Jul 01, 2025</span>
+            </li></ul></div><meta itemprop="author" content="Ilham"/><meta itemprop="datePublished" content="2025-07-01T00:00:00+07:00">
+    <meta itemprop="keywords" content="wsl2,ssh,windows,port-forwarding,jaringan"><div class="js-article-content"><div class="layout--article"><!-- start custom article top snippet -->
+
+<!-- end custom article top snippet -->
+<div class="article__content" itemprop="articleBody"><p><img src="/assets/images/wsl2-ssh-cover.png" alt="WSL2 SSH" title="WSL2 SSH" /></p>
+
+<p>WSL2 (Windows Subsystem for Linux versi 2) memungkinkan kita menjalankan Linux secara native di Windows. Namun, secara default, WSL2 menggunakan virtual network dengan IP yang berubah-ubah dan tidak langsung bisa diakses dari komputer lain di jaringan lokal.</p>
+
+<p>Di artikel ini, kita bakal kulik cara gampang agar WSL2 bisa diakses lewat <strong>SSH</strong>. Ini sangat berguna jika Anda ingin melakukan <em>remote development</em> dari laptop lain, mengelola server kecil di WSL2 dari tablet, atau sekedar ingin memisahkan lingkungan kerja Anda. Kita akan lakukan dengan:</p>
+
+<ul>
+  <li><strong>Set port forwarding di Windows</strong> — supaya koneksi dari luar diarahkan ke WSL2.</li>
+  <li><strong>Buka port di Windows Firewall</strong> — supaya akses SSH-nya nggak terblokir.</li>
+</ul>
+
+<p>Langsung aja kita mulai dari langkah pertama.</p>
+
+<h2 id="1-instalasi-dan-aktivasi-ssh-server-di-wsl2">1. Instalasi dan Aktivasi SSH Server di WSL2</h2>
+
+<h3 id="install-ssh-server">Install SSH Server</h3>
+
+<p>Masuk ke terminal WSL2, lalu jalankan perintah berikut untuk update dan install SSH server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt <span class="nb">install </span>openssh-server
+</code></pre></div></div>
+
+<h3 id="aktifkan-ssh-server">Aktifkan SSH Server</h3>
+
+<p>Untuk memulai service SSH, jalankan:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service ssh start
+</code></pre></div></div>
+
+<p>Cek status SSH:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service ssh status
+</code></pre></div></div>
+
+<p>Jika statusnya <code class="language-plaintext highlighter-rouge">sshd is running.</code> atau <code class="language-plaintext highlighter-rouge">active (running)</code>, berarti SSH server sudah aktif. Jika tertulis <code class="language-plaintext highlighter-rouge">sshd is not running ... failed!</code> atau <code class="language-plaintext highlighter-rouge">inactive (dead)</code>, jalankan ulang <code class="language-plaintext highlighter-rouge">sudo service ssh start</code>.</p>
+
+<p><strong>Beberapa perintah lain yang berguna:</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">sudo service ssh stop</code> — Mematikan SSH server</li>
+  <li><code class="language-plaintext highlighter-rouge">sudo service ssh restart</code> — Me-restart service SSH</li>
+</ul>
+
+<h3 id="opsional-ganti-port-default">(Opsional) Ganti Port Default</h3>
+
+<p>Edit file konfigurasi:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>nano /etc/ssh/sshd_config
+</code></pre></div></div>
+
+<p>Ubah:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#Port 22</span>
+</code></pre></div></div>
+
+<p>Menjadi:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Port 2222
+</code></pre></div></div>
+
+<p>Simpan lalu restart SSH:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service ssh restart
+</code></pre></div></div>
+
+<h2 id="2-cek-ip-wsl2">2. Cek IP WSL2</h2>
+
+<p>Jalankan perintah:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">hostname</span> <span class="nt">-I</span>
+</code></pre></div></div>
+
+<p>Contoh output:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>172.22.xxx.xx
+</code></pre></div></div>
+
+<p class="warning"><strong>Catatan:</strong> IP ini bisa berubah setiap kali WSL2 direstart. Jadi, <strong>perlu diperbarui juga di konfigurasi portproxy Windows jika berubah</strong>.</p>
+
+<h2 id="3-konfigurasi-port-forwarding-di-windows">3. Konfigurasi Port Forwarding di Windows</h2>
+
+<p>Windows perlu meneruskan koneksi dari port tertentu (misalnya 2222) ke IP dan port SSH WSL2.</p>
+
+<h3 id="mengecek-portproxy-yang-aktif">Mengecek Portproxy yang Aktif</h3>
+
+<p>Buka PowerShell sebagai Administrator, karena perintah <code class="language-plaintext highlighter-rouge">netsh</code> dan <code class="language-plaintext highlighter-rouge">New-NetFirewallRule</code> memerlukan hak akses tinggi untuk mengubah konfigurasi jaringan dan keamanan di Windows.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">netsh</span><span class="w"> </span><span class="nx">interface</span><span class="w"> </span><span class="nx">portproxy</span><span class="w"> </span><span class="nx">show</span><span class="w"> </span><span class="nx">all</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Contoh output:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Listen</span><span class="w"> </span><span class="nx">on</span><span class="w"> </span><span class="nx">ipv4:</span><span class="w">             </span><span class="nx">Connect</span><span class="w"> </span><span class="nx">to</span><span class="w"> </span><span class="nx">ipv4:</span><span class="w">
+</span><span class="n">Address</span><span class="w">         </span><span class="nx">Port</span><span class="w">        </span><span class="nx">Address</span><span class="w">         </span><span class="nx">Port</span><span class="w">
+</span><span class="o">---------------</span><span class="w"> </span><span class="o">----------</span><span class="w">  </span><span class="o">---------------</span><span class="w"> </span><span class="o">----------</span><span class="w">
+</span><span class="mf">0.0</span><span class="o">.</span><span class="nf">0</span><span class="o">.</span><span class="nf">0</span><span class="w">         </span><span class="mi">2222</span><span class="w">        </span><span class="mf">172.22</span><span class="o">.</span><span class="nf">134</span><span class="o">.</span><span class="nf">101</span><span class="w">  </span><span class="mi">2222</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="tambah-rule-port-forwarding">Tambah Rule Port Forwarding</h3>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">netsh</span><span class="w"> </span><span class="nx">interface</span><span class="w"> </span><span class="nx">portproxy</span><span class="w"> </span><span class="nx">add</span><span class="w"> </span><span class="nx">v4tov4</span><span class="w"> </span><span class="nx">listenport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">listenaddress</span><span class="o">=</span><span class="mf">0.0</span><span class="o">.</span><span class="nf">0</span><span class="o">.</span><span class="nf">0</span><span class="w"> </span><span class="n">connectport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">connectaddress</span><span class="o">=</span><span class="mf">172.22</span><span class="o">.</span><span class="nf">xxx</span><span class="o">.</span><span class="nf">xx</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">listenport</code>: Port di sisi Windows</li>
+  <li><code class="language-plaintext highlighter-rouge">listenaddress</code>: <code class="language-plaintext highlighter-rouge">0.0.0.0</code> agar bisa diakses dari komputer lain</li>
+  <li><code class="language-plaintext highlighter-rouge">connectaddress</code>: IP WSL2 (hasil dari <code class="language-plaintext highlighter-rouge">hostname -I</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">connectport</code>: Port SSH yang digunakan (22 atau 2222)</li>
+</ul>
+
+<h3 id="opsional-hapus-rule-port-forwarding">(Opsional) Hapus Rule Port Forwarding</h3>
+
+<p>Karena IP nya tidak konsisten, mungkin kita perlu menambahkan rule ulang untuk port forwarding.
+Sebelum menambahkan rule lagi alangkah baiknya kita hapus dulu rule yang sudah ada agar tidak menumpuk.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">netsh</span><span class="w"> </span><span class="nx">interface</span><span class="w"> </span><span class="nx">portproxy</span><span class="w"> </span><span class="nx">delete</span><span class="w"> </span><span class="nx">v4tov4</span><span class="w"> </span><span class="nx">listenport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">listenaddress</span><span class="o">=</span><span class="mf">0.0</span><span class="o">.</span><span class="nf">0</span><span class="o">.</span><span class="nf">0</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="4-pengaturan-firewall-windows">4. Pengaturan Firewall Windows</h2>
+
+<p>Agar komputer lain bisa terhubung ke port forwarding tadi, kita perlu membuka port di firewall Windows.</p>
+
+<h3 id="mengecek-rule-firewall-yang-ada">Mengecek rule firewall yang ada</h3>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Get-NetFirewallRule</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Where-Object</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="bp">$_</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Get-NetFirewallPortFilter</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Where-Object</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="bp">$_</span><span class="o">.</span><span class="nf">LocalPort</span><span class="w"> </span><span class="o">-eq</span><span class="w"> </span><span class="mi">2222</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Jika tidak ada hasil, berarti port belum dibuka.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Get-NetFirewallRule</code>: Mengambil semua rule firewall yang ada.</li>
+  <li><code class="language-plaintext highlighter-rouge">Where-Object { ... }</code>: Filter untuk mencari rule yang menggunakan <strong>port 2222</strong>.</li>
+  <li><code class="language-plaintext highlighter-rouge">Get-NetFirewallPortFilter</code>: Menampilkan properti port dari setiap rule.</li>
+  <li><code class="language-plaintext highlighter-rouge">LocalPort -eq 2222</code>: Hanya menampilkan rule yang menggunakan port 2222 secara lokal.</li>
+</ul>
+
+<p><strong>Gunanya:</strong> untuk memastikan apakah sudah ada rule firewall untuk port 2222 sebelum kita buat yang baru.</p>
+
+<h3 id="membuat-rule-firewall-baru-membuka-port-2222">Membuat rule firewall baru (membuka port 2222)</h3>
+
+<p>Jika belum dibuka jadi kita harus membuat rule firewall baru.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">New-NetFirewallRule</span><span class="w"> </span><span class="nt">-DisplayName</span><span class="w"> </span><span class="s2">"WSL2 SSH External"</span><span class="w"> </span><span class="nt">-Direction</span><span class="w"> </span><span class="nx">Inbound</span><span class="w"> </span><span class="nt">-LocalPort</span><span class="w"> </span><span class="nx">2222</span><span class="w"> </span><span class="nt">-Protocol</span><span class="w"> </span><span class="nx">TCP</span><span class="w"> </span><span class="nt">-Action</span><span class="w"> </span><span class="nx">Allow</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">New-NetFirewallRule</code>: Membuat rule firewall baru.</li>
+  <li><code class="language-plaintext highlighter-rouge">-DisplayName</code>: Nama yang ditampilkan untuk rule ini di Windows Firewall.</li>
+  <li><code class="language-plaintext highlighter-rouge">-Direction Inbound</code>: Rule ini untuk <strong>lalu lintas masuk</strong> ke komputer.</li>
+  <li><code class="language-plaintext highlighter-rouge">-LocalPort 2222</code>: Membuka <strong>port 2222</strong> agar bisa menerima koneksi masuk.</li>
+  <li><code class="language-plaintext highlighter-rouge">-Protocol TCP</code>: Rule ini berlaku untuk protokol <strong>TCP</strong>.</li>
+  <li><code class="language-plaintext highlighter-rouge">-Action Allow</code>: Mengizinkan koneksi yang cocok dengan rule ini.</li>
+</ul>
+
+<p><strong>Gunanya:</strong> Mengizinkan koneksi masuk ke port 2222 — port tempat WSL2 menerima SSH.</p>
+
+<h3 id="menonaktifkan-rule-firewall-tanpa-menghapusnya">Menonaktifkan rule firewall (tanpa menghapusnya)</h3>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Set-NetFirewallRule</span><span class="w"> </span><span class="nt">-DisplayName</span><span class="w"> </span><span class="s2">"WSL2 SSH External"</span><span class="w"> </span><span class="nt">-Enabled</span><span class="w"> </span><span class="nx">False</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Set-NetFirewallRule</code>: Mengubah properti dari rule firewall yang ada.</li>
+  <li><code class="language-plaintext highlighter-rouge">-DisplayName</code>: Menargetkan rule berdasarkan nama (harus sama persis).</li>
+  <li><code class="language-plaintext highlighter-rouge">-Enabled False</code>: Menonaktifkan rule tanpa menghapusnya.</li>
+</ul>
+
+<p><strong>Gunanya:</strong> Berguna jika kamu ingin <strong>sementara memblokir akses</strong> ke port 2222 tanpa kehilangan konfigurasi rule yang sudah dibuat.</p>
+
+<h3 id="mengaktifkan-kembali-rule-yang-sudah-dinonaktifkan">Mengaktifkan kembali rule yang sudah dinonaktifkan</h3>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Set-NetFirewallRule</span><span class="w"> </span><span class="nt">-DisplayName</span><span class="w"> </span><span class="s2">"WSL2 SSH External"</span><span class="w"> </span><span class="nt">-Enabled</span><span class="w"> </span><span class="nx">True</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li>Sama seperti sebelumnya, tapi <code class="language-plaintext highlighter-rouge">-Enabled True</code> untuk mengaktifkan kembali rule yang sudah ada.</li>
+</ul>
+
+<p><strong>Gunanya:</strong> Mengaktifkan ulang akses port SSH jika sebelumnya kamu nonaktifkan dengan <code class="language-plaintext highlighter-rouge">Enabled False</code>.</p>
+
+<h3 id="menghapus-rule-firewall-secara-permanen">Menghapus rule firewall secara permanen</h3>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Remove-NetFirewallRule</span><span class="w"> </span><span class="nt">-DisplayName</span><span class="w"> </span><span class="s2">"WSL2 SSH External"</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Remove-NetFirewallRule</code>: Menghapus rule firewall berdasarkan nama.</li>
+  <li><code class="language-plaintext highlighter-rouge">-DisplayName</code>: Nama dari rule yang ingin dihapus.</li>
+</ul>
+
+<p><strong>Gunanya:</strong> Menghapus rule secara permanen dari Windows Firewall. Setelah ini, koneksi ke port 2222 akan ditolak kecuali kamu buat rule baru lagi.</p>
+
+<h3 id="melihat-semua-rule-firewall">Melihat Semua Rule Firewall</h3>
+
+<p>Kalau ingin melihat semua rule firewall yang aktif atau nonaktif:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Get-NetFirewallRule</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Format-Table</span><span class="w"> </span><span class="nx">Name</span><span class="p">,</span><span class="w"> </span><span class="nx">DisplayName</span><span class="p">,</span><span class="w"> </span><span class="nx">Enabled</span><span class="p">,</span><span class="w"> </span><span class="nx">Direction</span><span class="p">,</span><span class="w"> </span><span class="nx">Action</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="5-testing-koneksi-ssh">5. Testing Koneksi SSH</h2>
+
+<h3 id="dari-windows-host-localhost">Dari Windows Host (localhost)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh user@localhost <span class="nt">-p</span> 2222
+</code></pre></div></div>
+
+<h3 id="dari-komputer-lain-di-jaringan-yang-sama-lokal">Dari Komputer Lain di Jaringan yang sama (Lokal)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh user@192.168.x.x <span class="nt">-p</span> 2222
+</code></pre></div></div>
+
+<h3 id="menggunakan-putty">Menggunakan PuTTY</h3>
+
+<ul>
+  <li>Hostname: <code class="language-plaintext highlighter-rouge">localhost</code> atau IP LAN Windows</li>
+  <li>Port: <code class="language-plaintext highlighter-rouge">2222</code></li>
+  <li>Connection type: SSH</li>
+</ul>
+
+<h2 id="6-troubleshooting">6. Troubleshooting</h2>
+
+<p>Tidak menutup kemungkinan jika kita akan mengalami error saat melakukan konfigurasi.
+Jadi jika terdapat error seperti <code class="language-plaintext highlighter-rouge">kex_exchange_identification: read: Connection reset by peer</code> coba solusi dibawah ini.</p>
+
+<p><strong>Solusi:</strong></p>
+
+<ul>
+  <li>Pastikan IP WSL2 belum berubah → cek ulang <code class="language-plaintext highlighter-rouge">hostname -I</code></li>
+  <li>Restart SSH di WSL2:</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service ssh restart
+</code></pre></div></div>
+
+<ul>
+  <li>Restart <em>IP Helper Service</em> di Windows:</li>
+</ul>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Restart-Service</span><span class="w"> </span><span class="nx">iphlpsvc</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li>Pastikan firewall tidak memblokir port 2222</li>
+  <li>Nonaktifkan antivirus/VPN sementara untuk memastikan tidak ada yang menghalangi koneksi</li>
+</ul>
+
+<h2 id="7-tips-tambahan">7. Tips Tambahan</h2>
+
+<h3 id="script-otomatis-port-forwarding-powershell">Script Otomatis Port Forwarding (PowerShell)</h3>
+
+<p>Kamu bisa menggunakan skrip berikut untuk menyegarkan konfigurasi setiap kali IP WSL2 berubah:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$wslIp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">wsl</span><span class="w"> </span><span class="nx">hostname</span><span class="w"> </span><span class="nt">-I</span><span class="p">)</span><span class="o">.</span><span class="nf">Trim</span><span class="p">()</span><span class="w">
+</span><span class="nx">netsh</span><span class="w"> </span><span class="nx">interface</span><span class="w"> </span><span class="nx">portproxy</span><span class="w"> </span><span class="nx">delete</span><span class="w"> </span><span class="nx">v4tov4</span><span class="w"> </span><span class="nx">listenport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">listenaddress</span><span class="o">=</span><span class="mf">0.0</span><span class="o">.</span><span class="nf">0</span><span class="o">.</span><span class="nf">0</span><span class="w">
+</span><span class="n">netsh</span><span class="w"> </span><span class="nx">interface</span><span class="w"> </span><span class="nx">portproxy</span><span class="w"> </span><span class="nx">add</span><span class="w"> </span><span class="nx">v4tov4</span><span class="w"> </span><span class="nx">listenport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">listenaddress</span><span class="o">=</span><span class="mf">0.0</span><span class="o">.</span><span class="nf">0</span><span class="o">.</span><span class="nf">0</span><span class="w"> </span><span class="n">connectport</span><span class="o">=</span><span class="mi">2222</span><span class="w"> </span><span class="n">connectaddress</span><span class="o">=</span><span class="nv">$wslIp</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="info"><strong>Opsional:</strong> Tambahkan skrip ini ke <strong>Task Scheduler</strong> agar dijalankan otomatis saat login/startup.</p>
+
+<h2 id="kesimpulan">Kesimpulan</h2>
+
+<p>Dengan mengatur port forwarding dan membuka firewall di Windows, kamu bisa mengakses WSL2 via SSH dari komputer lain di jaringan lokal. Ini membuat WSL2 jauh lebih fleksibel dan bisa digunakan layaknya server Linux sungguhan.</p>
+
+<p>Kalau kamu punya pertanyaan atau mengalami kendala saat menerapkan panduan ini, silakan tinggalkan komentar atau kirim pesan langsung. Terima kasih sudah membaca!</p>
+</div><section class="article__sharing d-print-none"><!-- AddToAny BEGIN -->
+<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+<a class="a2a_button_facebook"></a>
+<a class="a2a_button_threads"></a>
+<a class="a2a_button_whatsapp"></a>
+<a class="a2a_button_telegram"></a>
+<a class="a2a_button_reddit"></a>
+<a class="a2a_button_x"></a>
+<a class="a2a_button_linkedin"></a>
 </div>
-<div class="js-result layout--archive__result d-none"><div class="article-list items"><section><h2 class="article-list__group-header">2025</h2><ul class="items"><li class="item" itemscope itemtype="http://schema.org/BlogPosting" data-tags="wsl2,ssh,windows,port-forwarding,jaringan">
-        <div class="item__content"><span class="item__meta">Jul 01</span><a itemprop="headline" class="item__header" href="/wsl2/Port-Forwarding-di-WSL2/">Port Forwarding di WSL2: Akses SSH dari Host dan Jaringan Lokal</a></div>
-      </li><li class="item" itemscope itemtype="http://schema.org/BlogPosting" data-tags="adb,ldplayer,read-only-filesystem,system-partition">
-        <div class="item__content"><span class="item__meta">Apr 12</span><a itemprop="headline" class="item__header" href="/ldplayer/Cannot-Write-to-system-in-LDPlayer-9/">Fix: Cannot write to /system in LDPlayer 9 (Read-only File System)</a></div>
-      </li></div>
-</div>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+<!-- AddToAny END --></section><div class="d-print-none"><footer class="article__footer"><meta itemprop="dateModified" content="2025-07-01T00:00:00+07:00"><!-- start custom article footer snippet -->
+
+<!-- end custom article footer snippet -->
+<div class="article__license"><div class="license">
+    <p>This work is licensed under a <a itemprop="license" rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">Attribution-NonCommercial 4.0 International</a> license.
+      <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">
+        <img alt="Attribution-NonCommercial 4.0 International" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" />
+      </a>
+    </p>
+  </div></div></footer>
+<div class="article__section-navigator clearfix"><div class="previous"><span>PREVIOUS</span><a href="/ldplayer/Cannot-Write-to-system-in-LDPlayer-9/">Fix: Cannot write to /system in LDPlayer 9 (Read-only File System)</a></div></div></div>
+
 </div>
 
 <script>(function() {
   var SOURCES = window.TEXT_VARIABLES.sources;
-  function queryString() {
-    // This function is anonymous, is executed immediately and
-    // the return value is assigned to QueryString!
-    var i = 0, queryObj = {}, pair;
-    var queryStr = window.location.search.substring(1);
-    var queryArr = queryStr.split('&');
-    for (i = 0; i < queryArr.length; i++) {
-      pair = queryArr[i].split('=');
-      // If first entry with this name
-      if (typeof queryObj[pair[0]] === 'undefined') {
-        queryObj[pair[0]] = pair[1];
-        // If second entry with this name
-      } else if (typeof queryObj[pair[0]] === 'string') {
-        queryObj[pair[0]] = [queryObj[pair[0]], pair[1]];
-        // If third or later entry with this name
-      } else {
-        queryObj[pair[0]].push(pair[1]);
-      }
-    }
-    return queryObj;
-  }
-
-  var setUrlQuery = (function() {
-    var baseUrl =  window.location.href.split('?')[0];
-    return function(query) {
-      if (typeof query === 'string') {
-        window.history.replaceState(null, '', baseUrl + query);
-      } else {
-        window.history.replaceState(null, '', baseUrl);
-      }
-    };
-  })();
-
   window.Lazyload.js(SOURCES.jquery, function() {
-    var $tags = $('.js-tags');
-    var $articleTags = $tags.find('button');
-    var $tagShowAll = $tags.find('.tag-button--all');
-    var $result = $('.js-result');
-    var $sections = $result.find('section');
-    var sectionArticles = [];
-    var $lastFocusButton = null;
-    var sectionTopArticleIndex = [];
-    var hasInit = false;
+    $(function() {
+      var $this ,$scroll;
+      var $articleContent = $('.js-article-content');
+      var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+      var scroll = hasSidebar ? '.js-page-main' : 'html, body';
+      $scroll = $(scroll);
 
-    $sections.each(function() {
-      sectionArticles.push($(this).find('.item'));
+      $articleContent.find('.highlight').each(function() {
+        $this = $(this);
+        $this.attr('data-lang', $this.find('code').attr('data-lang'));
+      });
+      $articleContent.find('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').each(function() {
+        $this = $(this);
+        $this.append($('<a class="anchor d-print-none" aria-hidden="true"></a>').html('<i class="fas fa-anchor"></i>'));
+      });
+      $articleContent.on('click', '.anchor', function() {
+        $scroll.scrollToAnchor('#' + $(this).parent().attr('id'), 400);
+      });
     });
-
-    function init() {
-      var i, index = 0;
-      for (i = 0; i < $sections.length; i++) {
-        sectionTopArticleIndex.push(index);
-        index += $sections.eq(i).find('.item').length;
-      }
-      sectionTopArticleIndex.push(index);
-    }
-
-    function searchButtonsByTag(_tag/*raw tag*/) {
-      if (!_tag) {
-        return $tagShowAll;
-      }
-      var _buttons = $articleTags.filter('[data-encode="' + _tag + '"]');
-      if (_buttons.length === 0) {
-        return $tagShowAll;
-      }
-      return _buttons;
-    }
-    function buttonFocus(target) {
-      if (target) {
-        target.addClass('focus');
-        $lastFocusButton && !$lastFocusButton.is(target) && $lastFocusButton.removeClass('focus');
-        $lastFocusButton = target;
-      }
-    }
-
-    function tagSelect (tag/*raw tag*/, target) {
-      var result = {}, $articles;
-      var i, j, k, _tag;
-
-      for (i = 0; i < sectionArticles.length; i++) {
-        $articles = sectionArticles[i];
-        for (j = 0; j < $articles.length; j++) {
-          if (tag === '' || tag === undefined) {
-            result[i] || (result[i] = {});
-            result[i][j] = true;
-          } else {
-            var tags = $articles.eq(j).data('tags').split(',');
-            for (k = 0; k < tags.length; k++) {
-              if (tags[k] === tag) {
-                result[i] || (result[i] = {});
-                result[i][j] = true; break;
-              }
-            }
-          }
-        }
-      }
-
-      for (i = 0; i < sectionArticles.length; i++) {
-        result[i] && $sections.eq(i).removeClass('d-none');
-        result[i] || $sections.eq(i).addClass('d-none');
-        for (j = 0; j < sectionArticles[i].length; j++) {
-          if (result[i] && result[i][j]) {
-            sectionArticles[i].eq(j).removeClass('d-none');
-          } else {
-            sectionArticles[i].eq(j).addClass('d-none');
-          }
-        }
-      }
-
-      hasInit || ($result.removeClass('d-none'), hasInit = true);
-
-
-      if (target) {
-        buttonFocus(target);
-        _tag = target.attr('data-encode');
-        if (_tag === '' || typeof _tag !== 'string') {
-          setUrlQuery();
-        } else {
-          setUrlQuery('?tag=' + _tag);
-        }
-      } else {
-        buttonFocus(searchButtonsByTag(tag));
-      }
-    }
-
-    var query = queryString(), _tag = query.tag;
-    init(); tagSelect(_tag);
-    $tags.on('click', 'button', function() {
-      tagSelect($(this).data('encode'), $(this));
-    });
-
   });
 })();
 </script>
-
-
 </div><section class="page__comments d-print-none"></section></article><!-- start custom main bottom snippet -->
 
 <!-- end custom main bottom snippet -->
@@ -1030,6 +1184,68 @@ window.Lazyload.js([SOURCES.jquery, PAHTS.search_js], function() {
 /*(function () {
 
 })();*/
+</script><script>
+  /* toc must before affix, since affix need to konw toc' height. */(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  var TOC_SELECTOR = window.TEXT_VARIABLES.site.toc.selectors;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    var $window = $(window);
+    var $articleContent = $('.js-article-content');
+    var $tocRoot = $('.js-toc-root'), $col2 = $('.js-col-aside');
+    var toc;
+    var tocDisabled = false;
+    var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+    var hasToc = $articleContent.find(TOC_SELECTOR).length > 0;
+
+    function disabled() {
+      return $col2.css('display') === 'none' || !hasToc;
+    }
+
+    tocDisabled = disabled();
+
+    toc = $tocRoot.toc({
+      selectors: TOC_SELECTOR,
+      container: $articleContent,
+      scrollTarget: hasSidebar ? '.js-page-main' : null,
+      scroller: hasSidebar ? '.js-page-main' : null,
+      disabled: tocDisabled
+    });
+
+    $window.on('resize', window.throttle(function() {
+      tocDisabled = disabled();
+      toc && toc.setOptions({
+        disabled: tocDisabled
+      });
+    }, 100));
+
+  });
+})();
+(function() {
+  var SOURCES = window.TEXT_VARIABLES.sources;
+  window.Lazyload.js(SOURCES.jquery, function() {
+    var $window = $(window), $pageFooter = $('.js-page-footer');
+    var $pageAside = $('.js-page-aside');
+    var affix;
+    var tocDisabled = false;
+    var hasSidebar = $('.js-page-root').hasClass('layout--page--sidebar');
+
+    affix = $pageAside.affix({
+      offsetBottom: $pageFooter.outerHeight(),
+      scrollTarget: hasSidebar ? '.js-page-main' : null,
+      scroller: hasSidebar ? '.js-page-main' : null,
+      scroll: hasSidebar ? $('.js-page-main').children() : null,
+      disabled: tocDisabled
+    });
+
+    $window.on('resize', window.throttle(function() {
+      affix && affix.setOptions({
+        disabled: tocDisabled
+      });
+    }, 100));
+
+    window.pageAsideAffix = affix;
+  });
+})();
 </script>
     </div>
     <script>(function () {
