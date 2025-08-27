@@ -3,7 +3,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>Fix: Cannot write to /system in LDPlayer 9 (Read-only File System) - Syslogbook</title>
 
-<meta name="description" content="PermasalahanSaat mencoba menyalin atau mengedit file di direktori /system pada emulator LDPlayer 9, saya mengalami error berikut:# mv /sdcard/9a5ba575.0 /sys...">
+<meta name="description" content="PermasalahanSaat mencoba menyalin file ke direktori /system pada emulator LDPlayer 9, saya mengalami error berikut:# mv /sdcard/9a5ba575.0 /system/etc/securi...">
 <link rel="canonical" href="http://0.0.0.0:4000/ldplayer/Cannot-Write-to-system-in-LDPlayer-9/"><link rel="alternate" type="application/rss+xml" title="Syslogbook" href="/feed.xml"><!-- start favicons snippet, use https://realfavicongenerator.net/ --><link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png"><link rel="manifest" href="/assets/site.webmanifest"><link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#fc4d50"><link rel="shortcut icon" href="/assets/favicon.ico">
 
 <meta name="msapplication-TileColor" content="#ffc40d"><meta name="msapplication-config" content="/assets/browserconfig.xml">
@@ -309,7 +309,7 @@
 <!-- end custom article top snippet -->
 <div class="article__content" itemprop="articleBody"><h3 id="permasalahan">Permasalahan</h3>
 
-<p>Saat mencoba menyalin atau mengedit file di direktori <code class="language-plaintext highlighter-rouge">/system</code> pada emulator <strong>LDPlayer 9</strong>, saya mengalami error berikut:</p>
+<p>Saat mencoba menyalin file ke direktori <code class="language-plaintext highlighter-rouge">/system</code> pada emulator <strong>LDPlayer 9</strong>, saya mengalami error berikut:</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># mv /sdcard/9a5ba575.0 /system/etc/security/cacerts</span>
 <span class="nb">mv</span>: /system/etc/security/cacerts/9a5ba575.0: Read-only file system
