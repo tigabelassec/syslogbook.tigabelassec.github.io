@@ -1,16 +1,15 @@
 <!-- start custom head snippets -->
-{% assign page_title = page.title | default: site.title %}
-{% assign page_description = page.description | default: site.description %}
-{% assign page_url = site.url | append: page.url %}
-
-{%- assign default_image_path = "/assets/images/default.png" -%}
-{% assign page_image_path = page.image | default: default_image_path %}
-{% assign page_image = site.url | append: page_image_path %}
+{% assign page_title = page.title | default: site.title %} {% assign
+page_description = page.description | default: site.description %} {% assign
+page_url = site.url | append: page.url %} {%- assign default_image_path =
+"/assets/images/default.png" -%} {% assign page_image_path = page.image |
+default: default_image_path %} {% assign page_image = site.url | append:
+page_image_path %}
 
 <!-- Open Graph Meta Tags -->
 <meta property="og:title" content="{{ page_title }}" />
 <meta property="og:description" content="{{ page_description }}" />
-<meta property="og:url" content="{{ page_url }}" />
+<meta property="og:url" content="{%- include snippets/page-url.html -%}" />
 <meta property="og:type" content="article" />
 <meta property="og:image" content="{{ page_image }}" />
 
