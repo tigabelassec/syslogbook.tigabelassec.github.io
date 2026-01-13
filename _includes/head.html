@@ -17,7 +17,7 @@
 />
 <link rel="canonical" href="{%- include snippets/page-url.html -%}" />
 
-{% if page.robots %}
+{% if page.robots and page.url != "/" %}
 <meta name="robots" content="{{ page.robots }}" />
 {% endif %} {%- assign _paths_rss = site.paths.rss | default:
 site.data.variables.default.paths.rss -%} {%- include snippets/get-nav-url.html
